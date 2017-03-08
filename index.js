@@ -1,4 +1,4 @@
-
+var svg = document.getElementById("vimage");
 //needed vars:
 
 var dots=0;
@@ -6,9 +6,19 @@ var old_X=0;
 var old_Y=0;
 
 var change = function(e){
-    console.log("CAHBHEN");
-    this.setAttribute("fill", "red");
-    //e.stopPropagation();
+    if(this.getAttribute("fill") == "red"){
+	
+	svg.removeChild(this);
+	var x = Math.random() * 500;
+	var y = Math.random() * 500;
+	crtCirc(x,y);
+	console.log("work"+x+","+y+this.getAttribute("fill"));
+    }
+    else{
+	this.setAttribute("fill", "red");
+    }
+    console.log(this.getAttribute("fill"));
+    e.stopPropagation();
 };
 
 var crtCirc = function(x,y){
