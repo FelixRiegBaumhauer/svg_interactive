@@ -11,8 +11,8 @@ var change = function(e){
 	svg.removeChild(this);
 	var x = Math.random() * 500;
 	var y = Math.random() * 500;
-	crtCirc(x,y);
-	console.log("work"+x+","+y+this.getAttribute("fill"));
+	var c = crtCirc(x,y);
+	document.getElementById("vimage").appendChild(c);
     }
     else{
 	this.setAttribute("fill", "red");
@@ -39,6 +39,7 @@ var drop_dot = function(event){
     var y = event.offsetY;
 
     var c = crtCirc(x,y);
+    document.getElementById("vimage").appendChild(c);
     
     dots++;
 
@@ -52,7 +53,7 @@ var drop_dot = function(event){
     c.setAttribute("fill", "green");
      */
 
-    document.getElementById("vimage").appendChild(c);
+    //document.getElementById("vimage").appendChild(c);
 }
 
 
