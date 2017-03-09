@@ -48,6 +48,7 @@ var drop_dot = function(event){
 
 //fxn to clear
 var clear_svg = function(){
+    window.cancelAnimationFrame( requestID );
     dots=0;
     old_X=0;
     old_Y=0;
