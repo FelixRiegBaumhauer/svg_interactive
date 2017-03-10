@@ -11,8 +11,8 @@ var change = function(e){
       svg.removeChild(this);
 	     var x = Math.random() * 500;
 	     var y = Math.random() * 500;
-	     var c = crtCirc(x,y);
-	     document.getElementById("vimage").appendChild(c);
+	var c = crtCirc(x,y,this.getAttribute("r"));
+	//document.getElementById("vimage").appendChild(c);
     }
     else {
       this.setAttribute("fill", "red");
@@ -21,17 +21,19 @@ var change = function(e){
     e.stopPropagation();
 };
 
-var crtCirc = function(x,y){
+var crtCirc = function(x, y, r){
     var c = document.createElementNS("http://www.w3.org/2000/svg","circle");
     c.setAttribute("cx", x);
     c.setAttribute("cy", y);
-    c.setAttribute("r", "30");
+    c.setAttribute("r", r);
     c.setAttribute("fill", "green");
     c.setAttribute("dx", "-1");
     c.setAttribute("dy", "-1");
 
     c.addEventListener("click", change);
 
+    document.getElementById("vimage").appendChild(c);
+    
     return c;
 };
 
@@ -39,7 +41,7 @@ var crtCirc = function(x,y){
 var drop_dot = function(event){
     var x = event.offsetX;
     var y = event.offsetY;
-    var c = crtCirc(x,y);
+    var c = crtCirc(x,y,30);
     document.getElementById("vimage").appendChild(c);
     dots++;
     console.log("dot");
@@ -63,29 +65,45 @@ var clear_svg = function(){
 
 var move = function() {
     window.cancelAnimationFrame( requestID );
-
+    
     var bounce = function() {
 
-    var dots = document.getElementsByTagName('circle');
+	var dots = document.getElementsByTagName('circle');
 
-    for (var i = 0; i < dots.length; i++){
-        var dot = dots[i];
-        var cx = parseInt(dot.getAttribute("cx"));
-        var cy = parseInt(dot.getAttribute("cy"));
-        var r = parseInt(dot.getAttribute("r"));
+	for (var i = 0; i < dots.length; i++){
+            var dot = dots[i];
+            var cx = parseInt(dot.getAttribute("cx"));
+            var cy = parseInt(dot.getAttribute("cy"));
+            var r = parseInt(dot.getAttribute("r"));
+	    
+            if( cx-r<=0 || cx+r>=500) {
+		dot.setAttribute("dx", parseInt(-1 * dot.getAttribute("dx")));
+            }
+            if( cy-r<=0 || cy+r>=500) {
+		dot.setAttribute("dy", parseInt(-1 * dot.getAttribute("dy")));
+            }
+            cx += parseInt(dot.getAttribute("dx"));
+            cy += parseInt(dot.getAttribute("dy"));
+            dot.setAttribute("cx", cx);
+            dot.setAttribute("cy", cy);
 
-        if( cx-r<=0 || cx+r>=500) {
-          dot.setAttribute("dx", parseInt(-1 * dot.getAttribute("dx")));
-        }
-        if( cy-r<=0 || cy+r>=500) {
-          dot.setAttribute("dy", parseInt(-1 * dot.getAttribute("dy")));
-        }
-        cx += parseInt(dot.getAttribute("dx"));
-        cy += parseInt(dot.getAttribute("dy"));
-        dot.setAttribute("cx", cx);
-        dot.setAttribute("cy", cy);
-    };
-    requestID = window.requestAnimationFrame( bounce );
+	    //the changing at 250
+	    
+	    if(dot.getAttribute("cx") == 250){
+		dot.setAttribute("r", r/2);
+		var newC= crtCirc(cx, cy, r/2);
+		newC.setAttribute("dx", parseInt(-1 * dot.getAttribute("dx")));
+		newC.setAttribute("dy", parseInt(-1 * dot.getAttribute("dy")));
+		console.log("bump");
+	    }
+	    if(r < 1){
+		svg.removeChild(dot);
+	    }
+	};
+	
+	
+	
+	requestID = window.requestAnimationFrame( bounce );
     };
     bounce();
 };
